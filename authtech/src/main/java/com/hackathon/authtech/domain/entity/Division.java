@@ -20,8 +20,7 @@ public class Division {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
 
-    @Column(nullable = false)
-    @UniqueElements
+    @Column(nullable = false , unique = true)
     private String name;
 
     @JsonIgnore
@@ -46,13 +45,12 @@ public class Division {
     private List<Attendance> attendanceList;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "divisionID" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "divisionID" , cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     public List<Student> studentList;
 
 
     public List<Student> s(){
         return studentList;
     }
-
 
 }

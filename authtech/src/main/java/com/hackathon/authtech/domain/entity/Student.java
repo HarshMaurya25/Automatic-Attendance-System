@@ -46,9 +46,6 @@ public class Student {
     @Column(nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "studentID" ,cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "studentid" ,cascade = CascadeType.ALL , fetch = FetchType.EAGER)
     private List<Attendance> attendanceList;
-
-
-
 }

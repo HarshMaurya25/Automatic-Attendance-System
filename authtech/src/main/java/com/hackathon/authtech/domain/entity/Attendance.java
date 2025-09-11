@@ -24,7 +24,7 @@ public class Attendance {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "studentID")
-    private Student studentID;
+    private Student studentid;
 
     @JsonIgnore
     @ManyToOne
@@ -48,5 +48,8 @@ public class Attendance {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Column
+    private String session;
 
 }

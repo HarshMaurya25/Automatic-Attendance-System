@@ -26,48 +26,44 @@ public class QRController {
     private CourseRepo courseRepo;
     private TeacherRepo teacherRepo;
 
-    @GetMapping("/division/student")
-    public List<Student> getStudentFromDivision(
-            @RequestBody Id ID
-            ){
-        Division div = division(ID.id);
-
-        List<Student> students = div.studentList;
-
+    @PostMapping("/division/{id}/students")
+    public List<Student> getStudentFromDivision(@PathVariable UUID id) {
+        System.out.println(id);
+        Division division = drepo.getById(id);
+        System.out.println(division.toString());
+        List<Student> students = division.studentList;
         return students;
-
     }
 
     public Division division(UUID ID){
-        return drepo.findById(ID)
-                    .orElseThrow(() -> new RuntimeException("User not found with id: " ));
+        return drepo.getReferenceById(ID);
     }
 
     @PostMapping("/division/lecture")
-    public ResponseEntity QrMake(
-            @RequestBody QRDTO dto
-    ){
+    public ResponseEntity<?> QrMake(@RequestBody QRDTO dto) {
         Division div = division(dto.getDivisionID());
 
-        List<Student> students = div.studentList;
-        Teacher teachers = teacherRepo.getById(dto.getTeacherID());
+        List<Student> students = div.getStudentList();
+        if (students == null || students.isEmpty()) {
+            return ResponseEntity.status(404)
+                    .body("No students found for division " + dto.getDivisionID());
+        }
 
+        Teacher teacher = teacherRepo.getById(dto.getTeacherID());
         Course course = courseRepo.getById(dto.getCourseID());
 
         List<Attendance> attendanceList = students.stream()
-                .map(student -> new Attendance(null, student , course, LocalDate.now(),teachers, div , Status.ABSENT))
+                .map(student -> new Attendance(
+                        null, student, course, LocalDate.now(), teacher, div, Status.ABSENT , dto.getSessionID()
+                ))
                 .toList();
 
-        for(Attendance attendance : attendanceList){
-            System.out.println(attendance.toString());
-        }
-
-        Division division = drepo.getReferenceById(dto.getDivisionID());
-        division.setSessionID(dto.getSessionID());
-        drepo.save(division);
+        // assign session ID to division
+        div.setSessionID(dto.getSessionID());
+        drepo.save(div);
 
         arepo.saveAll(attendanceList);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(attendanceList);
     }
 }

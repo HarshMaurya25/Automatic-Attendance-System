@@ -12,4 +12,5 @@ import java.util.UUID;
 public class ScannedQr {
     private UUID student_id;
     private String session_id;
+    private UUID division_id;
 }
