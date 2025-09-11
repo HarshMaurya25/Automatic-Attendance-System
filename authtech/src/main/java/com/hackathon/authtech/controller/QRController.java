@@ -27,7 +27,7 @@ public class QRController {
     private TeacherRepo teacherRepo;
     private final StudentRepository studentRepo;
 
-    @PostMapping("/division/{id}/students")
+    @GetMapping("/division/{id}/students")
     public List<Student> getStudentFromDivision(@PathVariable UUID id) {
         List<Student> students = studentRepo.findByDivisionIDUuid(id);
         return students;
