@@ -21,7 +21,7 @@ public class AuthController {
     private final passwordRepository passwordRepository;
     private final StudentRepository studentRepository;
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public ResponseEntity<Optional<Student>> login(@RequestBody LoginRequest request) {
         Passwords passwordEntry = passwordRepository.findByMail(request.getMail());
 

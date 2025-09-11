@@ -47,6 +47,12 @@ public class Division {
 
     @JsonIgnore
     @OneToMany(mappedBy = "divisionID" , cascade = CascadeType.ALL)
-    private List<Student> studentList;
+    public List<Student> studentList;
+
+
+    public List<Student> s(){
+        return studentList;
+    }
+
 
 }
