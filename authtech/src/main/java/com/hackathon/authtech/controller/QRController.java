@@ -25,13 +25,11 @@ public class QRController {
     private AttandanceService attandaceService;
     private CourseRepo courseRepo;
     private TeacherRepo teacherRepo;
+    private final StudentRepository studentRepo;
 
     @PostMapping("/division/{id}/students")
     public List<Student> getStudentFromDivision(@PathVariable UUID id) {
-        System.out.println(id);
-        Division division = drepo.getById(id);
-        System.out.println(division.toString());
-        List<Student> students = division.studentList;
+        List<Student> students = studentRepo.findByDivisionIDUuid(id);
         return students;
     }
 
